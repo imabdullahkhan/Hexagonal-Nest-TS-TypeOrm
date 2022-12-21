@@ -13,28 +13,27 @@ import { Response } from 'express';
 
 
 import { BaseController } from 'src/common/web/BaseController';
-import { IBaseTestingRepository } from '../../application/ports/output-ports/IBaseTestingRepository';
 import { CreateBaseTestingsDto } from '../dto/CreateBaseTesting';
 import { BaseTestingDomainEntity } from '../../domain/entities/BaseTesting';
 import { CustomError } from 'src/common/types/error';
 import { ApiTags } from '@nestjs/swagger';
+import { IBaseTestingService } from '../../application/ports/in-ports/IBaseTestingService';
 @ApiTags('baseTesting')
 @Controller('/base-testing')
 export class BaseTestingController extends BaseController {
   constructor(
-    @Inject('IBaseTestingRepository')
-    private baseTestingService: IBaseTestingRepository,
+    @Inject('IBaseTestingService')
+    private baseTestingService: IBaseTestingService,
     @InjectMapper() private readonly classMapper: Mapper,
   ) {
     super();
   }
 
   @Get()
-  public async getAllDiscrepancyItems(@Query() query, @Res() res: Response) {
-    let discrepancyItems =
-      await this.baseTestingService.getAll(query);
+  public async getAllDiscrepancyItems(@Query() query) {
+    let discrepancyItems = await this.baseTestingService.getAllBaseTesting(query);
 
-    return this.success(discrepancyItems, res);
+    return discrepancyItems;
   }
 
   @Post()
@@ -47,7 +46,8 @@ export class BaseTestingController extends BaseController {
       CreateBaseTestingsDto,
       BaseTestingDomainEntity,
     );
-    let result = await this.baseTestingService.save(discrepancyItem);
+    console.log(discrepancyItem);
+    let result = await this.baseTestingService.newBaseTesting(discrepancyItem);
 
     if (result) {
       return this.success(result, res);

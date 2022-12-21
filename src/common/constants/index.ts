@@ -208,3 +208,12 @@ export const SHIPMENT_SKU_QUANTITY_KEY = {
 };
 
 export const MAX_INT_NUMBER = 2147483647;
+
+export const MessageTemplates = {
+  NotFoundError: 'NotFoundError',
+  UnauthorizedError: 'UNAUTHORIZED',
+  BadRequestError: 'BAD_REQUEST',
+  ForbiddenError: 'FORBIDDEN',
+  InternalServerError: 'INTERNAL_SERVER_ERROR',
+  InvalidValueFor: 'InvalidValueFor',
+};

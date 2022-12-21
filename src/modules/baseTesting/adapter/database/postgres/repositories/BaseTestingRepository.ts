@@ -5,12 +5,19 @@ import { Repository } from 'typeorm';
 import { BaseTestingEntity } from '../orm-entities/BaseTestingEntity';
 import { IBaseTestingRepository } from 'src/modules/baseTesting/application/ports/output-ports/IBaseTestingRepository';
 import { BaseTestingDomainEntity } from 'src/modules/baseTesting/domain/entities/BaseTesting';
+import { PostgresRepository } from 'src/common/repository/postgres.repository';
+
+
 export class BaseTestingRepository implements IBaseTestingRepository {
+  protected DefaultAlias: string;
+
   constructor(
     @InjectRepository(BaseTestingEntity)
     private readonly baseTestingEntityRepo: Repository<BaseTestingEntity>,
     @InjectMapper() private readonly classMapper: Mapper,
-  ) { }
+  ) {
+    // super(BaseTestingEntity);
+  }
 
   async getAll(conditions: any = {}): Promise<BaseTestingDomainEntity[]> {
     const baseTestingDomainEntityData: BaseTestingEntity[] =
@@ -18,6 +25,8 @@ export class BaseTestingRepository implements IBaseTestingRepository {
         where: conditions,
         relations: {},
       });
+    // const findAll: BaseTestingEntity[] = await this.Find({});
+    // console.log(findAll);
     const discrepancyItems = this.classMapper.mapArray(
       baseTestingDomainEntityData,
       BaseTestingEntity,

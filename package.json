@@ -52,6 +52,7 @@
     "html-pdf": "^3.0.1",
     "kafkajs": "^2.2.3",
     "moment": "^2.29.4",
+    "moment-timezone": "^0.5.40",
     "mustache": "^4.2.0",
     "pg": "^8.7.3",
     "reflect-metadata": "^0.1.13",

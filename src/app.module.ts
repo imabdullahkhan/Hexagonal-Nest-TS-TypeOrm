@@ -13,6 +13,10 @@ import { ProducerModule } from './common/producers/ProducerModule';
 import { LoggerMiddleware } from './common/middlewares/LoggerMiddleware';
 import { BaseTestingEntity } from './modules/baseTesting/adapter/database/postgres/orm-entities/BaseTestingEntity';
 import { BaseTestingModule } from './modules/baseTesting/BaseTestingModule';
+import { APP_FILTER, APP_INTERCEPTOR } from '@nestjs/core';
+import { HttpExceptionFilter } from './common/exception/http.exception';
+import { ResponseInterceptor } from './common/middlewares/ResponseInterception';
+import { DataSource } from 'typeorm';
 
 @Module({
   imports: [
@@ -43,16 +47,30 @@ import { BaseTestingModule } from './modules/baseTesting/BaseTestingModule';
         ],
         synchronize: false,
         logging: false,
-        // migrationsTableName: 'warehouse_migrations',
-        migrations: ['dist/migrations/*.js'],
+        migrationsTableName: 'warehouse_migrations',
+        migrations: [],
       }),
+      dataSourceFactory: async (options) => {
+        const dataSource = await new DataSource(options).initialize();
+        return dataSource;
+      },
     }),
     UtilsModule,
     ProducerModule,
     BaseTestingModule,
   ],
   controllers: [],
-  providers: [],
+  providers: [
+    {
+      provide: APP_FILTER,
+      useClass: HttpExceptionFilter,
+    },
+    {
+      provide: APP_INTERCEPTOR,
+      useClass: ResponseInterceptor,
+    },
+
+  ],
 })
 export class AppModule implements NestModule {
   configure(userContext: MiddlewareConsumer) {
